@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Insert and Delete</title>
+</head>
+<body>
+    <h2>Simple Input</h2>
+
+    <div class="row">
+        <form id="insertForm">
+            <h4>Enter ID</h4><input type="text" id="inputID" name="id" required>
+            <h4>Enter Name</h4><input type="text" id="inputName" name="name" required>
+            <h4>Enter Age</h4><input type="text" id="inputAge" name="age" required><br>
+            <button type="submit">Insert Data</button>
+        </form>
+    </div>
+
+    <h2>Delete Data</h2>
+    
+    <div class="row">
+        <form id="deleteForm">
+            <h4>Enter ID to Delete</h4><input type="text" id="deleteID" name="id" required><br>
+            <button type="submit">Delete Data</button>
+        </form>
+    </div>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+        import { getDatabase, set, ref, remove } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-database.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRJHP3Hn_I8csYmvV3s1y38CaLLle6YoY",
+            authDomain: "lab-6-task-2-6af0f.firebaseapp.com",
+            databaseURL: "https://lab-6-task-2-6af0f-default-rtdb.firebaseio.com",
+            projectId: "lab-6-task-2-6af0f",
+            storageBucket: "lab-6-task-2-6af0f.appspot.com",
+            messagingSenderId: "301491507942",
+            appId: "1:301491507942:web:f0f12d883bc92a68512127"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Insert Data
+        const insertForm = document.getElementById('insertForm');
+        insertForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const id = document.getElementById('inputID').value;
+            const name = document.getElementById('inputName').value;
+            const age = document.getElementById('inputAge').value;
+
+            set(ref(db, 'people/' + id), {
+                name: name,
+                ID: id,
+                age: age
+            })
+            .then(() => {
+                alert('Data added successfully!');
+                insertForm.reset();
+            })
+            .catch((error) => {
+                alert('Error: ' + error);
+            });
+        });
+
+        // Delete Data
+        const deleteForm = document.getElementById('deleteForm');
+        deleteForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const id = document.getElementById('deleteID').value;
+
+            remove(ref(db, 'people/' + id))
+            .then(() => {
+                alert('Data deleted successfully!');
+                deleteForm.reset();
+            })
+            .catch((error) => {
+                alert('Error: ' + error);
+            });
+        });
+    </script>
+</body>
+</html>
